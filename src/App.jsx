@@ -23,7 +23,11 @@ export default function App() {
       mapboxAccessToken={MAPBOX_TOKEN}
       projection="mercator"
     >
-      {contacts.map(contact => (
+      {contacts.map(contact => {
+      // skip contacts without coordinates for now
+      if (!contact.coordinates) return null
+
+      return (
         <Marker
           key={contact.id}
           longitude={contact.coordinates[0]}
@@ -41,7 +45,8 @@ export default function App() {
             cursor: 'pointer',
           }} />
         </Marker>
-      ))}
+      )
+    })}
     </Map>
   )
 }
