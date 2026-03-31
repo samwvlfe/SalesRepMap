@@ -14,7 +14,7 @@ export function useContacts() {
       return
     }
 
-    fetch('http://localhost:3001/api/contacts', {
+    fetch(`http://localhost:3001/api/contacts?t=${Date.now()}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }

@@ -11,9 +11,18 @@ export default async function contactRoutes(fastify) {
 
     try {
       const response = await fetch(
-        'https://api.hubapi.com/crm/v3/objects/contacts?limit=100&properties=firstname,lastname,email,phone,lifecyclestage,hs_owner_id,address,city,state,zip',
+        'https://api.hubapi.com/crm/v3/objects/contacts/search',
         {
-          headers: { Authorization: `Bearer ${accessToken}` }
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            sorts: [{ propertyName: 'createdate', direction: 'DESCENDING' }],
+            properties: ['firstname', 'lastname', 'email', 'phone', 'lifecyclestage', 'hs_lead_status', 'hs_owner_id', 'address', 'city', 'state', 'zip', 'photo_url', 'twitterprofilephoto', 'hs_avatar_filemanager_key'],
+            limit: 100
+          })
         }
       )
 
