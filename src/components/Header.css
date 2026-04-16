@@ -1,0 +1,32 @@
+.header {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  background-color: #fff;
+  opacity: 0.8;
+  height: 60px;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  z-index: 100;
+  border-bottom: 2px solid black;
+}
+
+.map-key {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 auto;
+}
+
+.map-key div {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.pip {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
