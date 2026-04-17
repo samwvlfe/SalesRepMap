@@ -21,6 +21,37 @@ export default function App() {
   const [selected, setSelected] = useState(null)
   const [listOpen, setListOpen] = useState(false)
   const [initialView, setInitialView] = useState(null)
+  const [selectedIds, setSelectedIds] = useState(() => {
+    try {
+      const stored = localStorage.getItem('salesmap_selected_contacts')
+      return stored ? new Set(JSON.parse(stored)) : new Set()
+    } catch { return new Set() }
+  })
+
+  const toggleSelect = (contact) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev)
+      if (next.has(contact.id)) next.delete(contact.id)
+      else next.add(contact.id)
+      localStorage.setItem('salesmap_selected_contacts', JSON.stringify([...next]))
+      return next
+    })
+  }
+
+  const selectAll = (filteredContacts) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev)
+      filteredContacts.forEach(c => next.add(c.id))
+      localStorage.setItem('salesmap_selected_contacts', JSON.stringify([...next]))
+      return next
+    })
+  }
+
+  useEffect(() => {
+    if (contacts.length === 0) return
+    const selectedContacts = contacts.filter(c => selectedIds.has(c.id))
+    localStorage.setItem('salesmap_selected_contacts_data', JSON.stringify(selectedContacts))
+  }, [selectedIds, contacts])
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -40,7 +71,7 @@ export default function App() {
       <Header />
       <Map
         initialViewState={initialView}
-        style={{ width: '100vw', height: '100vh' }}
+        style={{ width: '100vw', height: '95vh' }}
         mapStyle="mapbox://styles/mapbox/light-v11"
         mapboxAccessToken={MAPBOX_TOKEN}
         projection="mercator"
@@ -72,11 +103,17 @@ export default function App() {
         contact={selected}
         listOpen={listOpen}
         onClose={() => setSelected(null)}
+        selectedIds={selectedIds}
+        onToggleSelect={toggleSelect}
       />
       <ContactList
         contacts={contacts}
         open={listOpen}
         onToggle={() => setListOpen(o => !o)}
+        onSelectContact={setSelected}
+        selectedIds={selectedIds}
+        onToggleSelect={toggleSelect}
+        onSelectAll={selectAll}
       />
     </>
   )

@@ -2,11 +2,11 @@
   display: flex;
   flex-direction: column;
   position: fixed;
-  top: 80px;
+  top: 115px;
   right: 20px;
   z-index: 100;
-  width: 400px;
-  max-width: 400px;
+  width: 350px;
+  max-width: 350px;
   border-radius: 8px;
   overflow: hidden;
   transition: right 0.3s ease;
@@ -14,14 +14,14 @@
 
 /* Shift popup left when contact list panel is open (320px panel + 20px gap) */
 .user-popup.list-open {
-  right: 340px;
+  right: 380px;
 }
 
 .user-popup-hdr {
-  background-color: #be4e30;
+  background-color: #f0f0f0;
   display: flex;
   flex-direction: column;
-  color: white;
+  color: black;
   gap: 15px;
   padding: 10px 0;
   border-radius: 10px 10px 0 0;
@@ -35,7 +35,7 @@
 }
 
 .user-popup-hdr .exit {
-  border: 1px solid white;
+  border: 1px solid black;
   width: 20px;
   height: 20px;
   display: flex;
@@ -45,7 +45,6 @@
 }
 
 .user-popup-hdr .add {
-  border: 1px solid white;
   border-radius: 50%;
   width: 20px;
   height: 20px;
@@ -53,6 +52,13 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  color: #22c55e;
+  border: 2px solid transparent;
+  transition: border-color 0.15s;
+}
+
+.user-popup-hdr .add.selected {
+  border: 2px solid #22c55e;
 }
 
 .contact-title-cont {
@@ -93,7 +99,7 @@
   display: flex;
   flex-direction: column;
   background-color: #f0f0f0;
-  max-height: 65vh;
+  /* max-height: 74vh; */
   overflow-y: auto;
   padding: 10px 15px;
   border-radius: 0 0 10px 10px;
