@@ -5,7 +5,7 @@ export default async function authRoutes(fastify) {
     const params = new URLSearchParams({
       client_id: process.env.HUBSPOT_CLIENT_ID,
       redirect_uri: process.env.HUBSPOT_REDIRECT_URI,
-      scope: 'crm.objects.contacts.read crm.objects.owners.read',
+      scope: 'crm.objects.contacts.read crm.objects.contacts.write crm.objects.owners.read crm.lists.read crm.lists.write',
     })
     reply.redirect(`https://app.hubspot.com/oauth/authorize?${params}`)
   })

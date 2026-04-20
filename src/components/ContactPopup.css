@@ -53,12 +53,7 @@
   align-items: center;
   cursor: pointer;
   color: #22c55e;
-  border: 2px solid transparent;
   transition: border-color 0.15s;
-}
-
-.user-popup-hdr .add.selected {
-  border: 2px solid #22c55e;
 }
 
 .contact-title-cont {

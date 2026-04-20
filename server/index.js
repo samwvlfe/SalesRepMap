@@ -3,6 +3,7 @@ import cors from '@fastify/cors'
 import dotenv from 'dotenv'
 import authRoutes from './routes/auth.js'
 import contactRoutes from './routes/contacts.js'
+import listRoutes from './routes/lists.js'
 
 dotenv.config()
 
@@ -15,6 +16,7 @@ await fastify.register(cors, {
 
 fastify.register(authRoutes, { prefix: '/auth' })
 fastify.register(contactRoutes, { prefix: '/api' })
+fastify.register(listRoutes, { prefix: '/api' })
 
 try {
   await fastify.listen({ port: process.env.PORT || 3001 })

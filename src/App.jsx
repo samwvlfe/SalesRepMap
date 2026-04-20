@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Map, { Marker } from 'react-map-gl/mapbox'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { useContacts } from './hooks/useContacts'
 import ContactList from './components/ContactList'
 import ContactPopup from './components/ContactPopup'
 import Header from './components/Header'
+import CreateListModal from './components/CreateListModal'
+import Toast from './components/Toast'
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN
 
@@ -17,7 +19,8 @@ const leadStatusColors = {
 const DEFAULT_VIEW = { longitude: -79.51959, latitude: 33.42633, zoom: 7 }
 
 export default function App() {
-  const { contacts } = useContacts()
+  const [token, setToken] = useState(() => localStorage.getItem('hs_access_token'))
+  const { contacts } = useContacts(token)
   const [selected, setSelected] = useState(null)
   const [listOpen, setListOpen] = useState(false)
   const [initialView, setInitialView] = useState(null)
@@ -27,6 +30,34 @@ export default function App() {
       return stored ? new Set(JSON.parse(stored)) : new Set()
     } catch { return new Set() }
   })
+  const [showCreateList, setShowCreateList] = useState(false)
+  const [listLoading, setListLoading] = useState(false)
+  const [toast, setToast] = useState(null)
+
+  const createHubSpotList = useCallback(async (listName) => {
+    setShowCreateList(false)
+    setListLoading(true)
+    const token = localStorage.getItem('hs_access_token')
+    const contactIds = [...selectedIds]
+    console.log('contactIds:', contactIds, typeof contactIds[0])
+    try {
+      const res = await fetch('http://localhost:3001/api/lists/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ listName, contactIds: [...selectedIds] }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed to create list')
+      setToast({ message: `List "${data.listName}" created with ${selectedIds.size} contacts`, type: 'success' })
+    } catch (err) {
+      setToast({ message: err.message, type: 'error' })
+    } finally {
+      setListLoading(false)
+    }
+  }, [selectedIds])
 
   const toggleSelect = (contact) => {
     setSelectedIds(prev => {
@@ -36,6 +67,11 @@ export default function App() {
       localStorage.setItem('salesmap_selected_contacts', JSON.stringify([...next]))
       return next
     })
+  }
+
+  const clearAll = () => {
+    setSelectedIds(new Set())
+    localStorage.removeItem('salesmap_selected_contacts')
   }
 
   const selectAll = (filteredContacts) => {
@@ -62,6 +98,16 @@ export default function App() {
       ({ coords }) => setInitialView({ longitude: coords.longitude, latitude: coords.latitude, zoom: 9 }),
       () => setInitialView(DEFAULT_VIEW)
     )
+  }, [])
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const token = params.get('access_token')
+    if (token) {
+      localStorage.setItem('hs_access_token', token)
+      setToken(token)
+      window.history.replaceState({}, '', '/') // clean the URL
+    }
   }, [])
 
   if (!initialView) return null
@@ -114,7 +160,24 @@ export default function App() {
         selectedIds={selectedIds}
         onToggleSelect={toggleSelect}
         onSelectAll={selectAll}
+        onClearAll={clearAll}
+        onCreateList={() => setShowCreateList(true)}
+        listLoading={listLoading}
       />
+      {showCreateList && (
+        <CreateListModal
+          contactCount={selectedIds.size}
+          onConfirm={createHubSpotList}
+          onClose={() => setShowCreateList(false)}
+        />
+      )}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onDismiss={() => setToast(null)}
+        />
+      )}
     </>
   )
 }

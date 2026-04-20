@@ -1,10 +1,10 @@
 .contact-list-toggle {
   position: fixed;
-  top: 70px;
-  right: 20px;
+  top: 68px;
+  right: 7px;
   z-index: 200;
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   border: none;
   background-color: #be4e30;
@@ -37,45 +37,53 @@
   transform: translateX(0);
 }
 
-/* Header */
-.contact-list-header {
-  padding: 14px 16px 12px;
-  border-bottom: 1px solid #ececec;
+/* Tabs */
+.contact-list-tabs {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  border-bottom: 2px solid #ececec;
   flex-shrink: 0;
 }
 
-.contact-list-header-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.contact-list-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: #1a1a1a;
-}
-
-.contact-list-count {
-  font-size: 12px;
-  color: #aaa;
-  margin-top: 2px;
-}
-
-.contact-list-close {
+.contact-list-tab {
+  flex: 1;
+  padding: 12px 10px;
   background: none;
   border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #888;
   cursor: pointer;
-  font-size: 20px;
-  color: #aaa;
-  line-height: 1;
-  padding: 2px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  transition: color 0.15s, border-color 0.15s;
 }
 
-.contact-list-close:hover {
-  color: #555;
+.contact-list-tab:hover {
+  color: #be4e30;
+}
+
+.contact-list-tab.active {
+  color: #be4e30;
+  border-bottom-color: #be4e30;
+  font-weight: 600;
+}
+
+.tab-count {
+  background: #ececec;
+  color: #888;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: 20px;
+}
+
+.tab-count-selected {
+  background: #22c55e;
+  color: white;
 }
 
 /* Filters */
@@ -140,27 +148,24 @@
 .contact-list-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 11px 14px;
-  border-bottom: 1px solid #f3f3f3;
+  gap: 12px;
+  padding: 11px 16px;
+  border-bottom: 1px solid #f0f0f0;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background 0.13s;
 }
 
 .contact-list-item:hover {
-  background-color: #f0f0f0;
+  background: #f7f7f7;
+}
+
+.contact-list-item.item-selected {
+  background: rgba(34, 197, 94, 0.05);
 }
 
 .contact-list-item.no-coords {
   opacity: 0.4;
   cursor: default;
-}
-
-.contact-list-pip {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
 }
 
 .contact-list-info {
@@ -179,19 +184,21 @@
   text-overflow: ellipsis;
 }
 
-.contact-list-company {
-  font-size: 12px;
-  color: #888;
-  margin-top: 1px;
+.contact-list-meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #aaa;
+  margin-top: 2px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.contact-list-location {
-  font-size: 11px;
-  color: #bbb;
-  margin-top: 1px;
+.meta-dot {
+  color: #d0d0d0;
+  font-size: 10px;
 }
 
 /* Status badge */
@@ -203,6 +210,7 @@
   flex-shrink: 0;
   text-transform: uppercase;
   letter-spacing: 0.03em;
+  white-space: nowrap;
 }
 
 /* Empty state */
@@ -211,8 +219,10 @@
   text-align: center;
   font-size: 13px;
   color: #bbb;
+  line-height: 1.7;
 }
 
+/* Add/remove button */
 .add-to-list {
   border-radius: 50%;
   width: 22px;
@@ -222,15 +232,15 @@
   align-items: center;
   cursor: pointer;
   color: #22c55e;
-  border: 2px solid transparent;
   flex-shrink: 0;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, color 0.15s;
 }
 
 .add-to-list.selected {
-  border-color: #22c55e;
+  color: #ef4444;
 }
 
+/* Select all row */
 .sel-all {
   font-size: 12px;
   color: #22c55e;
@@ -238,7 +248,6 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 4px;
 }
 
 .sel-all:hover {
@@ -252,4 +261,132 @@
   font-weight: 600;
   padding: 2px 7px;
   border-radius: 20px;
+}
+
+/* Selected tab toolbar */
+.selected-tab-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  border-bottom: 1px solid #ececec;
+  font-size: 12px;
+  color: #888;
+  flex-shrink: 0;
+  gap: 8px;
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.create-list-btn {
+  background: #be4e30;
+  color: white;
+  border: none;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 11px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+  white-space: nowrap;
+}
+
+.create-list-btn:hover:not(:disabled) {
+  background: #a8391f;
+}
+
+.create-list-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.clear-all-btn {
+  background: none;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.clear-all-btn:hover {
+  background: #ef4444;
+  color: white;
+}
+
+/* Selected tab */
+.selected-tab-body {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.selected-contact-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.selected-contact-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.selected-contact-item:hover {
+  background: #f8f8f8;
+}
+
+.selected-contact-item.no-coords {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.selected-contact-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.selected-contact-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  flex: 1;
+}
+
+.selected-contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-left: 18px;
+  font-size: 12px;
+  color: #555;
+}
+
+.selected-contact-details > div {
+  display: flex;
+  gap: 6px;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #aaa;
+  min-width: 60px;
+}
+
+.contact-list-pip {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
 }

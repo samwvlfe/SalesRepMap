@@ -1,27 +1,18 @@
 import { useState, useEffect } from 'react'
 
-export function useContacts() {
+export function useContacts(token) {
   const [contacts, setContacts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    const token = localStorage.getItem('hs_access_token')
-
-    if (!token) {
-      setError('No access token found')
-      setLoading(false)
-      return
-    }
+    if (!token) return
 
     fetch(`http://localhost:3001/api/contacts?t=${Date.now()}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+      headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
       .then(data => {
-        console.log('HubSpot contacts:', data)
         setContacts(data.results || [])
         setLoading(false)
       })
@@ -29,7 +20,7 @@ export function useContacts() {
         setError(err.message)
         setLoading(false)
       })
-  }, [])
+  }, [token])
 
   return { contacts, loading, error }
 }
